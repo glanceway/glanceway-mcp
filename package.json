@@ -1,0 +1,17 @@
+{
+  "name": "glanceway-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/index.ts --bundle --platform=node --target=node22 --format=esm --define:PKG_VERSION=\\\"$npm_package_version\\\" --outfile=dist/mcpb/server/index.mjs",
+    "pack": "npm run build && cp manifest.json icon.png dist/mcpb/ && cd dist/mcpb && zip -r ../glanceway.mcpb ."
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "esbuild": "^0.24.0"
+  }
+}

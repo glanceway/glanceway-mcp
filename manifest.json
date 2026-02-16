@@ -1,0 +1,29 @@
+{
+  "manifest_version": "0.3",
+  "name": "glanceway",
+  "display_name": "Glanceway",
+  "version": "1.0.0",
+  "description": "Connect Claude to your Glanceway menu bar app — browse sources and read items.",
+  "author": { "name": "Glanceway" },
+  "icon": "icon.png",
+  "homepage": "https://glanceway.app",
+  "license": "MIT",
+  "compatibility": {
+    "platforms": ["darwin"]
+  },
+  "tools": [
+    { "name": "glanceway_list_sources", "description": "List all enabled sources configured in Glanceway" },
+    { "name": "glanceway_list_items", "description": "List items from Glanceway sources, sorted by timestamp" }
+  ],
+  "prompts": [
+    { "name": "summarize", "description": "Summarize all current Glanceway items grouped by source", "arguments": [], "text": "Use the glanceway_list_sources tool to get all sources, then use glanceway_list_items to fetch items. Group items by source and summarize the most notable recent items." }
+  ],
+  "server": {
+    "type": "node",
+    "entry_point": "server/index.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": ["${__dirname}/server/index.mjs"]
+    }
+  }
+}
