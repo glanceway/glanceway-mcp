@@ -2,7 +2,11 @@
 
 MCP (Model Context Protocol) server for [Glanceway](https://glanceway.app), the macOS menu bar information app. Lets AI assistants read your sources and items.
 
-## Setup
+## Install
+
+### mcpb (recommended)
+
+Download [`glanceway.mcpb`](https://github.com/glanceway/glanceway-mcp/releases/latest/download/glanceway.mcpb) from the [latest release](https://github.com/glanceway/glanceway-mcp/releases/latest) and open it in Claude Desktop to install.
 
 ### Build from source
 
@@ -12,7 +16,7 @@ npm run build    # bundle to dist/mcpb/server/index.mjs
 npm run pack     # build + produce dist/glanceway.mcpb
 ```
 
-### Add to Claude Desktop
+### Add to Claude Desktop manually
 
 Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 
