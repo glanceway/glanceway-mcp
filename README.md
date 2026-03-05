@@ -34,7 +34,7 @@ Add to `~/Library/Application Support/Claude/claude_desktop_config.json`:
 ### Add to Claude Code
 
 ```bash
-claude mcp add glanceway node /path/to/dist/mcpb/server/index.mjs
+claude mcp add glanceway -- npx -y glanceway-mcp
 ```
 
 ## Tools
