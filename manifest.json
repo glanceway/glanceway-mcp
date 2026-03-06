@@ -16,7 +16,9 @@
     { "name": "glanceway_list_items", "description": "List items from Glanceway sources, sorted by timestamp" }
   ],
   "prompts": [
-    { "name": "summarize", "description": "Summarize all current Glanceway items grouped by source", "arguments": [], "text": "Use the glanceway_list_sources tool to get all sources, then use glanceway_list_items to fetch items. Group items by source and summarize the most notable recent items." }
+    { "name": "summarize_unread", "description": "Summarize all unread Glanceway items grouped by source", "text": "Fetch only unread items, group by source, and highlight anything time-sensitive or noteworthy." },
+    { "name": "summarize_recent", "description": "Summarize Glanceway items from the last day", "text": "Fetch all items from the last 24 hours, group by source, and summarize key updates." },
+    { "name": "summarize_source", "description": "Summarize items from a specific Glanceway source", "text": "Fetch all items from a given source and provide a detailed summary with unread count and trends." }
   ],
   "server": {
     "type": "node",

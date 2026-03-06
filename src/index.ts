@@ -86,18 +86,65 @@ server.registerTool(
 // -- Prompts ----------------------------------------------------------------
 
 server.registerPrompt(
-  "summarize",
-  { description: "Summarize all current Glanceway items grouped by source" },
+  "summarize_unread",
+  { description: "Summarize all unread Glanceway items grouped by source" },
   async () => ({
     messages: [
       {
         role: "user" as const,
         content: {
           type: "text" as const,
-          text: `Use the glanceway_list_sources tool to get all sources, then use glanceway_list_items to fetch items. Group items by source, and for each source provide:
-- Source name and status
+          text: `Use the glanceway_list_sources tool to get all sources, then use glanceway_list_items with isRead=false to fetch only unread items. Group items by source, and for each source provide:
+- Source name
 - Number of unread items
-- A brief summary of the most notable/recent items (up to 5 per source)
+- A brief summary of the items (up to 5 per source)
+
+Present the results in a clear, scannable format. Highlight anything that looks time-sensitive or particularly noteworthy. If there are no unread items, say so.`,
+        },
+      },
+    ],
+  }),
+);
+
+server.registerPrompt(
+  "summarize_recent",
+  { description: "Summarize Glanceway items from the last day" },
+  async () => ({
+    messages: [
+      {
+        role: "user" as const,
+        content: {
+          type: "text" as const,
+          text: `Use the glanceway_list_sources tool to get all sources, then use glanceway_list_items to fetch all items. Filter to only items with a timestamp within the last 24 hours, group them by source, and for each source provide:
+- Source name
+- Number of items in the last 24 hours
+- A brief summary of the items
+
+Present the results in a clear, scannable format. Highlight anything that looks time-sensitive or particularly noteworthy. If a source has no items in the last 24 hours, skip it.`,
+        },
+      },
+    ],
+  }),
+);
+
+server.registerPrompt(
+  "summarize_source",
+  {
+    description: "Summarize items from a specific Glanceway source",
+    inputSchema: {
+      sourceId: z.string().describe("The source ID to summarize"),
+    },
+  },
+  async ({ sourceId }) => ({
+    messages: [
+      {
+        role: "user" as const,
+        content: {
+          type: "text" as const,
+          text: `Use glanceway_list_items with sourceId="${sourceId}" to fetch all items from this source. Provide:
+- Total number of items and how many are unread
+- A summary of the most recent items (up to 10)
+- Any patterns or notable trends in the content
 
 Present the results in a clear, scannable format. Highlight anything that looks time-sensitive or particularly noteworthy.`,
         },
