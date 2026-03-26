@@ -68,14 +68,45 @@ server.registerTool(
     inputSchema: {
       sourceId: z.string().optional().describe("Filter items by source ID"),
       isRead: z.boolean().optional().describe("Filter by read status"),
+      limit: z.number().optional().describe("Maximum items to return (default: 50, max: 500)"),
+      until: z.number().optional().describe("Only items with timestamp < this value, exclusive (Unix seconds). Use for forward pagination."),
+      since: z.number().optional().describe("Only items with timestamp > this value, exclusive (Unix seconds). Use for backward pagination."),
     },
   },
-  async ({ sourceId, isRead }) => {
+  async ({ sourceId, isRead, limit, until, since }) => {
     const params = new URLSearchParams();
     if (sourceId) params.set("sourceId", sourceId);
     if (isRead !== undefined) params.set("isRead", String(isRead));
+    if (limit !== undefined) params.set("limit", String(limit));
+    if (until !== undefined) params.set("until", String(until));
+    if (since !== undefined) params.set("since", String(since));
     const qs = params.toString();
     const path = qs ? `/v1/items?${qs}` : "/v1/items";
+    const data = await apiGet(path);
+    return {
+      content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
+    };
+  },
+);
+
+server.registerTool(
+  "glanceway_list_favorites",
+  {
+    description:
+      "List favorited items from Glanceway. Returns items sorted by favorited time (newest first).",
+    inputSchema: {
+      limit: z.number().optional().describe("Maximum items to return (default: 50, max: 500)"),
+      until: z.number().optional().describe("Only items with favoritedAt < this value, exclusive (Unix seconds). Use for forward pagination."),
+      since: z.number().optional().describe("Only items with favoritedAt > this value, exclusive (Unix seconds). Use for backward pagination."),
+    },
+  },
+  async ({ limit, until, since }) => {
+    const params = new URLSearchParams();
+    if (limit !== undefined) params.set("limit", String(limit));
+    if (until !== undefined) params.set("until", String(until));
+    if (since !== undefined) params.set("since", String(since));
+    const qs = params.toString();
+    const path = qs ? `/v1/favorites?${qs}` : "/v1/favorites";
     const data = await apiGet(path);
     return {
       content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
@@ -131,7 +162,7 @@ server.registerPrompt(
   "summarize_source",
   {
     description: "Summarize items from a specific Glanceway source",
-    inputSchema: {
+    argsSchema: {
       sourceId: z.string().describe("The source ID to summarize"),
     },
   },
